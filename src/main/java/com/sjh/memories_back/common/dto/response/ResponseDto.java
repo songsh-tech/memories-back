@@ -13,7 +13,7 @@ public class ResponseDto {
   private String code;
   private String message;
 
-  public ResponseDto() {
+  protected ResponseDto() {
     this.code = ResponseCode.SUCCESS;
     this.message = ResponseMessage.SUCCESS;
   }
@@ -31,6 +31,11 @@ public class ResponseDto {
   public static ResponseEntity<ResponseDto> existUser() {
     ResponseDto body = new ResponseDto(ResponseCode.EXIST_USER, ResponseMessage.EXIST_USER);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+  }
+
+  public static ResponseEntity<ResponseDto> signInFail() {
+    ResponseDto body = new ResponseDto(ResponseCode.SIGN_IN_FAIL, ResponseMessage.SIGN_IN_FAIL);
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
   }
 
   public static ResponseEntity<ResponseDto> databaseError() {
