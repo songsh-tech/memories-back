@@ -17,14 +17,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OAuth2UserServiceImplement extends DefaultOAuth2UserService{
+public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
 
   private final UserRepository userRepository;
   private final JwtProvider jwtProvider;
-
+  
   @Override
-	      public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
+	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     OAuth2User oAuth2User = super.loadUser(userRequest);
     String registration = userRequest.getClientRegistration().getClientName().toUpperCase();
 
@@ -41,23 +40,24 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService{
     UserEntity userEntity = userRepository.findByJoinTypeAndSnsId(registration, snsId);
 
     CustomOAuth2User customOAuth2User = null;
+    Map<String, Object> attributes = new HashMap<>();
 
     if (userEntity == null) {
-      
+      attributes.put("snsId", snsId);
+      attributes.put("joinType", registration);
+
+      customOAuth2User = new CustomOAuth2User(snsId, attributes, false);
     } else {
       String userId = userEntity.getUserId();
       String accessToken = jwtProvider.create(userId);
-
-      Map<String, Object> attributes = new HashMap<>();
       attributes.put("accessToken", accessToken);
 
       customOAuth2User = new CustomOAuth2User(userId, attributes, true);
     }
 
     return customOAuth2User;
-
   }
-  
+
   // function: 결과로 받은 유저 정보에서 ragistration에 따라 id 값을 추출하는 함수 //
   private String getSnsId(OAuth2User oAuth2User, String registration) {
 
@@ -68,7 +68,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService{
     }
     if (registration.equals("NAVER")) {
       Map<String, String> response = (Map<String, String>) oAuth2User.getAttributes().get("response");
-      snsId =response.get("id");
+      snsId = response.get("id");
     }
 
     return snsId;

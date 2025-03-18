@@ -29,9 +29,11 @@ public class SignUpRequestDto {
   private String address;
 
   private String detailAddress;
-
-  @NotBlank
-  @Pattern(regexp="^(NORMAL|KAKAO|NAVER)$" )
-  private String joinType;
   
+  @NotBlank
+  @Pattern(regexp="^(NORMAL|KAKAO|NAVER)$")
+  private String joinType;
+
+  private String snsId;
+
 }
