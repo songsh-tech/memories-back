@@ -26,7 +26,7 @@ public class DiaryServiceImplement implements DiarySerivce {
 
   @Override
   public ResponseEntity<ResponseDto> postDiary(PostDiaryRequestDto dto, String userId) {
-    
+
     try {
 
       DiaryEntity diaryEntity = new DiaryEntity(dto, userId);
@@ -48,7 +48,7 @@ public class DiaryServiceImplement implements DiarySerivce {
     
     try {
 
-      diaryEntities = diaryRepository.findByUserId(userId);
+      diaryEntities = diaryRepository.findByUserIdOrderByWriteDateDesc(userId);
 
     } catch(Exception exception) {
       exception.printStackTrace();
@@ -61,14 +61,14 @@ public class DiaryServiceImplement implements DiarySerivce {
 
   @Override
   public ResponseEntity<? super GetDiaryResponseDto> getDiary(Integer diaryNumber) {
-    
-    DiaryEntity diaryEntity = null;
 
+    DiaryEntity diaryEntity = null;
+    
     try {
-      
+
       diaryEntity = diaryRepository.findByDiaryNumber(diaryNumber);
       if (diaryEntity == null) return ResponseDto.noExistDiary();
-
+      
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
@@ -82,17 +82,17 @@ public class DiaryServiceImplement implements DiarySerivce {
   public ResponseEntity<ResponseDto> patchDiary(PatchDiaryRequestDto dto, Integer diaryNumber, String userId) {
     
     try {
-      
+
       DiaryEntity diaryEntity = diaryRepository.findByDiaryNumber(diaryNumber);
       if (diaryEntity == null) return ResponseDto.noExistDiary();
 
       String writerId = diaryEntity.getUserId();
       boolean isWriter = writerId.equals(userId);
-      if (!isWriter) return ResponseDto.npPermission();
+      if (!isWriter) return ResponseDto.noPermission();
 
       diaryEntity.patch(dto);
       diaryRepository.save(diaryEntity);
-
+      
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
@@ -112,7 +112,7 @@ public class DiaryServiceImplement implements DiarySerivce {
 
       String writerId = diaryEntity.getUserId();
       boolean isWriter = writerId.equals(userId);
-      if (!isWriter) return ResponseDto.npPermission();
+      if (!isWriter) return ResponseDto.noPermission();
 
       diaryRepository.delete(diaryEntity);
 

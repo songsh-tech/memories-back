@@ -9,12 +9,14 @@ import lombok.Getter;
 
 @Getter
 public class DiaryVO {
+  private Integer diaryNumber;
   private String writeDate;
   private String title;
   private String weather;
   private String feeling;
 
   private DiaryVO(DiaryEntity diaryEntity) {
+    this.diaryNumber = diaryEntity.getDiaryNumber();
     this.writeDate = diaryEntity.getWriteDate();
     this.title = diaryEntity.getTitle();
     this.weather = diaryEntity.getWeather();
@@ -22,8 +24,8 @@ public class DiaryVO {
   }
 
   public static List<DiaryVO> getList(List<DiaryEntity> diaryEntities) {
-
     List<DiaryVO> list = new ArrayList<>();
+
     for (DiaryEntity diaryEntity: diaryEntities) {
       DiaryVO vo = new DiaryVO(diaryEntity);
       list.add(vo);

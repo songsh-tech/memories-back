@@ -43,7 +43,7 @@ public class ResponseDto {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
   }
 
-  public static ResponseEntity<ResponseDto> npPermission() {
+  public static ResponseEntity<ResponseDto> noPermission() {
     ResponseDto body = new ResponseDto(ResponseCode.NO_PERMISSION, ResponseMessage.NO_PERMISSION);
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
   }
